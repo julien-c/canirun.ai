@@ -1177,19 +1177,39 @@ function identifyAppleChipByMeasurements({
 // ────────────────────────────────────────────────────────────────────────────
 
 /**
- * Detect the host's hardware and return a HardwareInfo object suitable for
- * the scoring pipeline. Single async call; safe to invoke once on page load.
+ * @typedef {"iOS"|"macOS"|"Windows"|"Android"|"ChromeOS"|"Linux"|null} Platform
+ */
+
+/**
+ * Normalized snapshot of the host's hardware, produced by {@link detectHardware}
+ * and consumed by every scoring function.
  *
- * @returns {Promise<{
- *   gpuRenderer: string|null, gpuVendor: string|null,
- *   gpuCores: number|null, ramGB: number|null,
- *   estimatedVRAM: number|null, memoryBandwidth: number|null,
- *   systemRAM: number|null, deviceMemoryRaw: number|null,
- *   webgpu: boolean, webgpuDevice: string|null, webgpuArch: string|null,
- *   isAppleSilicon: boolean, totalUsableRAM: number|null,
- *   platform: string|null, cpuBenchmark: number,
- *   isMobile: boolean, deviceName: string|null,
- * }>}
+ * @typedef {object} HardwareInfo
+ * @property {string|null}  gpuRenderer      Raw WebGL renderer string (may be redacted).
+ * @property {string|null}  gpuVendor        Raw WebGL vendor string.
+ * @property {number|null}  gpuCores         Estimated GPU core count.
+ * @property {number|null}  ramGB            Best guess of usable memory in GB
+ *                                           (VRAM for dGPUs, unified RAM for Apple Silicon / mobile).
+ * @property {number|null}  estimatedVRAM    VRAM in GB for discrete GPUs; null on unified-memory devices.
+ * @property {number|null}  memoryBandwidth  Effective memory bandwidth in GB/s.
+ * @property {number|null}  systemRAM        Coarse system RAM bucket in GB (null on unified-memory devices).
+ * @property {number|null}  deviceMemoryRaw  Raw `navigator.deviceMemory` value (capped at 8 by spec).
+ * @property {boolean}      webgpu           Whether WebGPU is supported.
+ * @property {string|null}  webgpuDevice     Device name from `adapter.info.device`.
+ * @property {string|null}  webgpuArch       Architecture from `adapter.info.architecture`.
+ * @property {boolean}      isAppleSilicon
+ * @property {number|null}  totalUsableRAM   Memory the model can actually live in.
+ * @property {Platform}     platform
+ * @property {number}       cpuBenchmark     Synthetic CPU score (~30ms loop).
+ * @property {boolean}      isMobile
+ * @property {string|null}  deviceName       Human-friendly device label, when known.
+ */
+
+/**
+ * Detect the host's hardware and return a {@link HardwareInfo} object suitable
+ * for the scoring pipeline. Single async call; safe to invoke once on page load.
+ *
+ * @returns {Promise<HardwareInfo>}
  */
 async function detectHardware() {
 	const deviceMemoryRaw = navigator.deviceMemory || null;
@@ -1351,12 +1371,19 @@ function describeDevice(hw) {
 // ────────────────────────────────────────────────────────────────────────────
 
 /**
- * Can this hardware run a model of `modelSizeGB`? Returns one of
- * "can-run" | "can-run-slow" | "tight" | "cannot-run" | "unknown".
+ * @typedef {"can-run"|"can-run-slow"|"tight"|"cannot-run"|"unknown"} FitStatus
+ */
+
+/**
+ * Can this hardware run a model of `modelSizeGB`?
  *
  * Mobile and Apple Silicon have unified memory so we compare against a
  * fraction of total RAM. Discrete GPUs compare against VRAM, with a
- * "can-run-slow" path when the surplus can be covered by system RAM.
+ * `"can-run-slow"` path when the surplus can be covered by system RAM.
+ *
+ * @param {number} modelSizeGB  Memory footprint of the model, in gigabytes.
+ * @param {HardwareInfo} hw     Detected hardware (typically from {@link detectHardware}).
+ * @returns {FitStatus}
  */
 function classifyFit(modelSizeGB, hw) {
 	if (hw.isMobile && !hw.isAppleSilicon && hw.totalUsableRAM) {
