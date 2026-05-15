@@ -1,9 +1,5 @@
 // Clean rewrite of hardware-ui.DPleEu7M.js (canirun.ai).
 //
-// Preserves behavior and exports. The original module exports functions under
-// single-letter aliases (A, B, D, G, ...) consumed by ModelListContent.js;
-// the alias re-exports at the bottom keep this file drop-in compatible.
-//
 // Pipeline:
 //   1. Read what the browser is willing to disclose (WebGL renderer string,
 //      WebGPU adapter info, navigator.deviceMemory, hardwareConcurrency).
