@@ -1720,12 +1720,10 @@ function populateDeviceSelect(selectEl, currentValue) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Public API — descriptive names + legacy single-letter aliases for the
-// existing minified consumer (ModelListContent.js).
+// Public API
 // ────────────────────────────────────────────────────────────────────────────
 
 export {
-	// Descriptive names (preferred for new code)
 	DESKTOP_GPUS,
 	APPLE_SILICON,
 	MOBILE_GPUS,
@@ -1747,30 +1745,4 @@ export {
 	mergeNumericOption,
 	autosizeSelect,
 	titleCase,
-};
-
-// Legacy aliases — match the original minified exports so this file can be
-// dropped in place of hardware-ui.DPleEu7M.js without touching its consumer.
-export {
-	APPLE_SILICON as A,
-	BANDWIDTH_OPTIONS as B,
-	GROUP_ORDER as D,
-	GRADE_STYLES as G,
-	MOBILE_GPUS as M,
-	RAM_OPTIONS as R,
-	SBCS as S,
-	populateDeviceSelect as a,
-	applyOverrides as b,
-	describeDevice as c,
-	detectHardware as d,
-	scoreModel as e,
-	resolveDevicePreset as f,
-	loadOverrides as g,
-	titleCase as h,
-	autosizeSelect as i,
-	buildDevicePresetGroups as j,
-	mergeNumericOption as k,
-	DESKTOP_GPUS as l,
-	populateNumericSelect as p,
-	saveOverrides as s,
 };

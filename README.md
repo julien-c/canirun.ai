@@ -30,10 +30,7 @@ All detection runs locally in the browser — no network calls.
 
 ## Usage
 
-It's an ES module. The exported names are descriptive (`detectHardware`,
-`scoreModel`, `describeDevice`, …), and the original single-letter aliases
-(`d`, `e`, `c`, …) are also re-exported so this file can be dropped in place
-of the minified original without touching its consumer.
+It's an ES module:
 
 ```js
 import { detectHardware, scoreModel, describeDevice } from "./canirun-ai.js";
