@@ -353,12 +353,24 @@ function titleCase(s) {
 /** Detect coarse OS from User-Agent. Returns null for unknown UAs. */
 function detectOS() {
 	const ua = navigator.userAgent;
-	if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
-	if (ua.includes("Mac OS X")) return "macOS";
-	if (ua.includes("Windows")) return "Windows";
-	if (ua.includes("Android")) return "Android";
-	if (ua.includes("CrOS")) return "ChromeOS";
-	if (ua.includes("Linux")) return "Linux";
+	if (ua.includes("iPhone") || ua.includes("iPad")) {
+		return "iOS";
+	}
+	if (ua.includes("Mac OS X")) {
+		return "macOS";
+	}
+	if (ua.includes("Windows")) {
+		return "Windows";
+	}
+	if (ua.includes("Android")) {
+		return "Android";
+	}
+	if (ua.includes("CrOS")) {
+		return "ChromeOS";
+	}
+	if (ua.includes("Linux")) {
+		return "Linux";
+	}
 	return null;
 }
 
@@ -376,7 +388,9 @@ function benchmarkCPU() {
 	}
 	const elapsedMs = performance.now() - start;
 	// The log() guards against the JIT optimizing away the unused result.
-	if (acc === Infinity) console.log(acc);
+	if (acc === Infinity) {
+		console.log(acc);
+	}
 	return Math.round((2_000_000 / elapsedMs) * 0.05);
 }
 
@@ -393,7 +407,9 @@ function readWebGLRendererInfo() {
 	try {
 		const canvas = document.createElement("canvas");
 		const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
-		if (!gl) return { renderer: null, vendor: null };
+		if (!gl) {
+			return { renderer: null, vendor: null };
+		}
 
 		const debugExt = gl.getExtension("WEBGL_debug_renderer_info");
 		if (debugExt) {
@@ -436,7 +452,9 @@ function prettifyRendererString(raw) {
 
 	// For Apple, keep only what comes after "Apple —" / "Apple ".
 	const appleMatch = s.match(/Apple\s*(?:—\s*)?(.+)/i);
-	if (appleMatch && appleMatch[1].trim()) s = appleMatch[1].trim();
+	if (appleMatch && appleMatch[1].trim()) {
+		s = appleMatch[1].trim();
+	}
 	return s;
 }
 
@@ -472,7 +490,9 @@ function matchMobileGPU(rendererString) {
 		.replace(/\s+/g, " ")
 		.trim();
 	for (const [name, spec] of Object.entries(MOBILE_GPUS)) {
-		if (haystack.includes(name.toUpperCase())) return { name, bw: spec.bw };
+		if (haystack.includes(name.toUpperCase())) {
+			return { name, bw: spec.bw };
+		}
 	}
 	return null;
 }
@@ -482,7 +502,9 @@ function matchMobileGPU(rendererString) {
 function matchAppleSilicon(rendererString) {
 	const haystack = rendererString.toLowerCase();
 	for (const [chip, spec] of Object.entries(APPLE_SILICON)) {
-		if (haystack.includes(chip)) return spec;
+		if (haystack.includes(chip)) {
+			return spec;
+		}
 	}
 	return haystack.includes("apple") ? APPLE_SILICON.m1 : null;
 }
@@ -506,7 +528,9 @@ function parseVRAMFromRenderer(rendererString) {
 	const m =
 		rendererString.match(/\((\d+)\s*GB\)/i) ||
 		rendererString.match(/\b(\d+)\s*GB\b/i);
-	if (!m) return null;
+	if (!m) {
+		return null;
+	}
 	const gb = parseInt(m[1], 10);
 	return gb >= 1 && gb <= 128 ? gb : null;
 }
@@ -529,7 +553,7 @@ function fingerprintIOSDevice(cpuBenchmark) {
 
 	// iPad path (any iOS device with a "tablet-sized" short edge).
 	if (shortSide >= 744) {
-		if (cpuBenchmark > 100)
+		if (cpuBenchmark > 100) {
 			return {
 				name: "iPad Pro (M-series)",
 				ram: 16,
@@ -538,7 +562,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 				gpuCores: 10,
 				isTablet: true,
 			};
-		if (cpuBenchmark > 80)
+		}
+		if (cpuBenchmark > 80) {
 			return {
 				name: "iPad Air",
 				ram: 8,
@@ -547,6 +572,7 @@ function fingerprintIOSDevice(cpuBenchmark) {
 				gpuCores: 10,
 				isTablet: true,
 			};
+		}
 		return {
 			name: "iPad",
 			ram: 4,
@@ -567,7 +593,7 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			? " Pro"
 			: "";
 
-	if (cpuBenchmark > 115)
+	if (cpuBenchmark > 115) {
 		return {
 			name: `iPhone${proSuffix} (A19 Pro)`,
 			ram: 8,
@@ -576,7 +602,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 6,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 105)
+	}
+	if (cpuBenchmark > 105) {
 		return {
 			name: `iPhone${proSuffix} (A18 Pro)`,
 			ram: 8,
@@ -585,7 +612,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 6,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 97)
+	}
+	if (cpuBenchmark > 97) {
 		return {
 			name: `iPhone${proSuffix} (A18)`,
 			ram: 8,
@@ -594,7 +622,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 5,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 90)
+	}
+	if (cpuBenchmark > 90) {
 		return {
 			name: `iPhone${proSuffix} (A17 Pro)`,
 			ram: 8,
@@ -603,7 +632,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 6,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 75)
+	}
+	if (cpuBenchmark > 75) {
 		return {
 			name: "iPhone (A16)",
 			ram: isPro ? 8 : 6,
@@ -612,7 +642,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 5,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 60)
+	}
+	if (cpuBenchmark > 60) {
 		return {
 			name: "iPhone (A15)",
 			ram: 6,
@@ -621,7 +652,8 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 5,
 			isTablet: false,
 		};
-	if (cpuBenchmark > 45)
+	}
+	if (cpuBenchmark > 45) {
 		return {
 			name: "iPhone (A14)",
 			ram: 4,
@@ -630,6 +662,7 @@ function fingerprintIOSDevice(cpuBenchmark) {
 			gpuCores: 4,
 			isTablet: false,
 		};
+	}
 	return {
 		name: "iPhone (A13 or older)",
 		ram: 4,
@@ -647,12 +680,14 @@ function fingerprintIOSDevice(cpuBenchmark) {
 /** Request a WebGPU adapter and read its `device` and `architecture` info. */
 async function readWebGPUAdapterInfo() {
 	try {
-		if (!("gpu" in navigator))
+		if (!("gpu" in navigator)) {
 			return { supported: false, device: null, arch: null, adapter: null };
+		}
 
 		const adapter = await navigator.gpu.requestAdapter();
-		if (!adapter)
+		if (!adapter) {
 			return { supported: false, device: null, arch: null, adapter: null };
+		}
 
 		let device = null,
 			arch = null;
@@ -735,7 +770,9 @@ async function benchmarkGPUCores(adapter, vendor) {
 		const opsPerMs = (N * ITERS * 2) / elapsedMs / 1e6; // "MFLOPS-ish"
 		const vendorLower = (vendor || "").toLowerCase();
 		for (const [key, divisor] of Object.entries(VENDOR_FLOPS_PER_CORE)) {
-			if (vendorLower.includes(key)) return Math.round(opsPerMs / divisor);
+			if (vendorLower.includes(key)) {
+				return Math.round(opsPerMs / divisor);
+			}
 		}
 		return null;
 	} catch {
@@ -800,7 +837,9 @@ async function benchmarkGPUBandwidth(adapter) {
 
 		const REPS = 10;
 		const t0 = performance.now();
-		for (let i = 0; i < REPS; i++) dispatch();
+		for (let i = 0; i < REPS; i++) {
+			dispatch();
+		}
 		await device.queue.onSubmittedWorkDone();
 		const elapsedMs = performance.now() - t0;
 
@@ -828,7 +867,9 @@ function benchmarkWebGLBandwidth() {
 		canvas.width = SIZE;
 		canvas.height = SIZE;
 		const gl = canvas.getContext("webgl2");
-		if (!gl) return null;
+		if (!gl) {
+			return null;
+		}
 
 		const TAPS = 32;
 		const vertSrc = `#version 300 es
@@ -861,13 +902,17 @@ function benchmarkWebGLBandwidth() {
 
 		const vs = compile(gl.VERTEX_SHADER, vertSrc);
 		const fs = compile(gl.FRAGMENT_SHADER, fragSrc);
-		if (!vs || !fs) return null;
+		if (!vs || !fs) {
+			return null;
+		}
 
 		const program = gl.createProgram();
 		gl.attachShader(program, vs);
 		gl.attachShader(program, fs);
 		gl.linkProgram(program);
-		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+			return null;
+		}
 
 		// Fullscreen triangle strip.
 		const vbo = gl.createBuffer();
@@ -885,7 +930,9 @@ function benchmarkWebGLBandwidth() {
 		const srcTex = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, srcTex);
 		const pixels = new Uint8Array(SIZE * SIZE * 4);
-		for (let i = 0; i < pixels.length; i++) pixels[i] = (i * 7 + 13) & 255;
+		for (let i = 0; i < pixels.length; i++) {
+			pixels[i] = (i * 7 + 13) & 255;
+		}
 		gl.texImage2D(
 			gl.TEXTURE_2D,
 			0,
@@ -937,7 +984,9 @@ function benchmarkWebGLBandwidth() {
 
 		const REPS = 10;
 		const t0 = performance.now();
-		for (let i = 0; i < REPS; i++) gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		for (let i = 0; i < REPS; i++) {
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		}
 		gl.finish();
 		const elapsedMs = performance.now() - t0;
 
@@ -969,7 +1018,9 @@ function benchmarkWebGLBandwidth() {
  * can't even tell if it's a "real" GPU.
  */
 function estimateBandwidthByHeuristic(renderer, vendor, vramGB, os) {
-	if (!renderer && !vendor) return null;
+	if (!renderer && !vendor) {
+		return null;
+	}
 
 	const r = (renderer || "").toUpperCase();
 	const v = (vendor || "").toUpperCase();
@@ -981,34 +1032,55 @@ function estimateBandwidthByHeuristic(renderer, vendor, vramGB, os) {
 		isIntel &&
 		(r.includes("UHD") || r.includes("IRIS") || r.includes("HD GRAPHICS"));
 
-	if (isIntelIGP) return 50;
+	if (isIntelIGP) {
+		return 50;
+	}
 
 	if (isNvidia) {
 		if (r.includes("RTX")) {
-			if (vramGB && vramGB >= 20) return 700;
-			if (vramGB && vramGB >= 12) return 450;
-			if (vramGB && vramGB >= 8) return 300;
+			if (vramGB && vramGB >= 20) {
+				return 700;
+			}
+			if (vramGB && vramGB >= 12) {
+				return 450;
+			}
+			if (vramGB && vramGB >= 8) {
+				return 300;
+			}
 			return 250;
 		}
 		if (r.includes("GTX")) {
-			if (vramGB && vramGB >= 8) return 250;
-			if (vramGB && vramGB >= 4) return 150;
+			if (vramGB && vramGB >= 8) {
+				return 250;
+			}
+			if (vramGB && vramGB >= 4) {
+				return 150;
+			}
 			return 112;
 		}
 		return vramGB && vramGB >= 8 ? 300 : 150;
 	}
 
 	if (isAMD) {
-		if (r.includes("RADEON GRAPHICS") || r.includes("RADEON(TM) GRAPHICS"))
+		if (r.includes("RADEON GRAPHICS") || r.includes("RADEON(TM) GRAPHICS")) {
 			return 55;
-		if (vramGB && vramGB >= 16) return 500;
-		if (vramGB && vramGB >= 8) return 300;
-		if (vramGB && vramGB >= 4) return 180;
+		}
+		if (vramGB && vramGB >= 16) {
+			return 500;
+		}
+		if (vramGB && vramGB >= 8) {
+			return 300;
+		}
+		if (vramGB && vramGB >= 4) {
+			return 180;
+		}
 		return 150;
 	}
 
 	// Unknown desktop GPU on Windows/Linux — assume something modest.
-	if (os === "Windows" || os === "Linux") return 60;
+	if (os === "Windows" || os === "Linux") {
+		return 60;
+	}
 	return null;
 }
 
@@ -1021,10 +1093,14 @@ function estimateBandwidthByHeuristic(renderer, vendor, vramGB, os) {
 function estimateVRAMFromAdapterLimits(adapter) {
 	try {
 		const maxBufferSize = adapter.limits?.maxBufferSize;
-		if (!maxBufferSize) return null;
+		if (!maxBufferSize) {
+			return null;
+		}
 
 		const maxBufferGB = maxBufferSize / 1024 ** 3;
-		if (maxBufferGB < 0.5) return null;
+		if (maxBufferGB < 0.5) {
+			return null;
+		}
 
 		const guessGB = maxBufferGB * 2;
 		const KNOWN_CONFIGS = [
@@ -1032,7 +1108,9 @@ function estimateVRAMFromAdapterLimits(adapter) {
 		];
 		let nearest = KNOWN_CONFIGS[0];
 		for (const c of KNOWN_CONFIGS) {
-			if (Math.abs(c - guessGB) < Math.abs(nearest - guessGB)) nearest = c;
+			if (Math.abs(c - guessGB) < Math.abs(nearest - guessGB)) {
+				nearest = c;
+			}
 		}
 		return nearest >= 2 ? nearest : null;
 	} catch {
@@ -1136,7 +1214,9 @@ async function detectHardware() {
 		platform === "macOS" &&
 		!rendererHasExplicitChip &&
 		(isAppleSilicon || vendor?.toLowerCase().includes("apple") === true);
-	if (macOSGenericApple) isAppleSilicon = true;
+	if (macOSGenericApple) {
+		isAppleSilicon = true;
+	}
 
 	let ramGB = null,
 		estimatedVRAM = null,
@@ -1191,7 +1271,9 @@ async function detectHardware() {
 	if (!memoryBandwidth && wgpu.adapter) {
 		memoryBandwidth = await benchmarkGPUBandwidth(wgpu.adapter);
 	}
-	if (!memoryBandwidth) memoryBandwidth = benchmarkWebGLBandwidth();
+	if (!memoryBandwidth) {
+		memoryBandwidth = benchmarkWebGLBandwidth();
+	}
 	if (!memoryBandwidth) {
 		memoryBandwidth = estimateBandwidthByHeuristic(
 			renderer,
@@ -1224,9 +1306,13 @@ async function detectHardware() {
 
 	// Coarse system-RAM bucket: phones/Apple Silicon are unified, so leave null.
 	let systemRAM;
-	if (isAppleSilicon || isMobile) systemRAM = null;
-	else if (deviceMemoryRaw != null) systemRAM = deviceMemoryRaw >= 8 ? 16 : 4;
-	else systemRAM = 16;
+	if (isAppleSilicon || isMobile) {
+		systemRAM = null;
+	} else if (deviceMemoryRaw != null) {
+		systemRAM = deviceMemoryRaw >= 8 ? 16 : 4;
+	} else {
+		systemRAM = 16;
+	}
 
 	return {
 		gpuRenderer: renderer,
@@ -1251,8 +1337,12 @@ async function detectHardware() {
 
 /** Human-friendly device label for the UI. */
 function describeDevice(hw) {
-	if (hw.deviceName) return hw.deviceName;
-	if (hw.gpuRenderer) return prettifyRendererString(hw.gpuRenderer);
+	if (hw.deviceName) {
+		return hw.deviceName;
+	}
+	if (hw.gpuRenderer) {
+		return prettifyRendererString(hw.gpuRenderer);
+	}
 	return "Unknown";
 }
 
@@ -1272,29 +1362,47 @@ function classifyFit(modelSizeGB, hw) {
 	if (hw.isMobile && !hw.isAppleSilicon && hw.totalUsableRAM) {
 		const fraction = hw.platform === "iOS" ? 0.5 : 0.55;
 		const usable = hw.totalUsableRAM * fraction;
-		if (modelSizeGB <= usable * 0.7) return "can-run";
-		if (modelSizeGB <= usable) return "tight";
+		if (modelSizeGB <= usable * 0.7) {
+			return "can-run";
+		}
+		if (modelSizeGB <= usable) {
+			return "tight";
+		}
 		return "cannot-run";
 	}
 	if (hw.isAppleSilicon && hw.totalUsableRAM) {
 		const usable = hw.totalUsableRAM * 0.75;
-		if (modelSizeGB <= usable * 0.7) return "can-run";
-		if (modelSizeGB <= usable) return "tight";
+		if (modelSizeGB <= usable * 0.7) {
+			return "can-run";
+		}
+		if (modelSizeGB <= usable) {
+			return "tight";
+		}
 		return "cannot-run";
 	}
 	if (hw.estimatedVRAM) {
-		if (modelSizeGB <= hw.estimatedVRAM * 0.85) return "can-run";
-		if (modelSizeGB <= hw.estimatedVRAM * 1.1) return "tight";
+		if (modelSizeGB <= hw.estimatedVRAM * 0.85) {
+			return "can-run";
+		}
+		if (modelSizeGB <= hw.estimatedVRAM * 1.1) {
+			return "tight";
+		}
 		if (hw.systemRAM && hw.systemRAM > hw.estimatedVRAM) {
 			const spillover = hw.systemRAM * 0.7;
-			if (modelSizeGB <= hw.estimatedVRAM + spillover) return "can-run-slow";
+			if (modelSizeGB <= hw.estimatedVRAM + spillover) {
+				return "can-run-slow";
+			}
 		}
 		return "cannot-run";
 	}
 	if (hw.totalUsableRAM) {
 		const usable = hw.totalUsableRAM * 0.7;
-		if (modelSizeGB <= usable * 0.7) return "can-run";
-		if (modelSizeGB <= usable) return "tight";
+		if (modelSizeGB <= usable * 0.7) {
+			return "can-run";
+		}
+		if (modelSizeGB <= usable) {
+			return "tight";
+		}
 		return "cannot-run";
 	}
 	return "unknown";
@@ -1306,12 +1414,18 @@ function classifyFit(modelSizeGB, hw) {
  * spills out of VRAM we model two tiers harmonically.
  */
 function estimateTokensPerSec(modelSizeGB, hw) {
-	if (!hw.memoryBandwidth) return null;
+	if (!hw.memoryBandwidth) {
+		return null;
+	}
 
 	let efficiency;
-	if (hw.isMobile && !hw.isAppleSilicon) efficiency = 0.4;
-	else if (hw.isAppleSilicon) efficiency = 0.65;
-	else efficiency = 0.7;
+	if (hw.isMobile && !hw.isAppleSilicon) {
+		efficiency = 0.4;
+	} else if (hw.isAppleSilicon) {
+		efficiency = 0.65;
+	} else {
+		efficiency = 0.7;
+	}
 
 	// Spillover case: a fraction of model lives in VRAM, rest in system RAM.
 	if (hw.estimatedVRAM && modelSizeGB > hw.estimatedVRAM && hw.systemRAM) {
@@ -1344,20 +1458,26 @@ function estimateMemoryPercent(modelSizeGB, hw) {
  * heuristic the original site is calibrated with.
  */
 function computeScore(status, toksPerSec, modelSizeGB, memPct = null) {
-	if (status === "cannot-run" || status === "unknown") return 0;
+	if (status === "cannot-run" || status === "unknown") {
+		return 0;
+	}
 
 	// Throughput component.
 	let speedScore = 0;
 	if (toksPerSec !== null) {
-		if (toksPerSec >= 80) speedScore = 100;
-		else if (toksPerSec >= 40)
+		if (toksPerSec >= 80) {
+			speedScore = 100;
+		} else if (toksPerSec >= 40) {
 			speedScore = linearMap(toksPerSec, 40, 80, 80, 100);
-		else if (toksPerSec >= 20)
+		} else if (toksPerSec >= 20) {
 			speedScore = linearMap(toksPerSec, 20, 40, 55, 80);
-		else if (toksPerSec >= 10)
+		} else if (toksPerSec >= 10) {
 			speedScore = linearMap(toksPerSec, 10, 20, 35, 55);
-		else if (toksPerSec >= 5) speedScore = linearMap(toksPerSec, 5, 10, 15, 35);
-		else speedScore = linearMap(Math.max(toksPerSec, 0), 0, 5, 0, 15);
+		} else if (toksPerSec >= 5) {
+			speedScore = linearMap(toksPerSec, 5, 10, 15, 35);
+		} else {
+			speedScore = linearMap(Math.max(toksPerSec, 0), 0, 5, 0, 15);
+		}
 	} else {
 		speedScore = status === "can-run" ? 45 : 20;
 	}
@@ -1365,11 +1485,17 @@ function computeScore(status, toksPerSec, modelSizeGB, memPct = null) {
 	// Memory-headroom component.
 	let memScore = 45;
 	if (memPct !== null) {
-		if (memPct <= 20) memScore = 100;
-		else if (memPct <= 40) memScore = linearMap(memPct, 20, 40, 100, 75);
-		else if (memPct <= 60) memScore = linearMap(memPct, 40, 60, 75, 45);
-		else if (memPct <= 80) memScore = linearMap(memPct, 60, 80, 45, 20);
-		else memScore = linearMap(Math.min(memPct, 100), 80, 100, 20, 0);
+		if (memPct <= 20) {
+			memScore = 100;
+		} else if (memPct <= 40) {
+			memScore = linearMap(memPct, 20, 40, 100, 75);
+		} else if (memPct <= 60) {
+			memScore = linearMap(memPct, 40, 60, 75, 45);
+		} else if (memPct <= 80) {
+			memScore = linearMap(memPct, 60, 80, 45, 20);
+		} else {
+			memScore = linearMap(Math.min(memPct, 100), 80, 100, 20, 0);
+		}
 	}
 
 	// Bigger models get a small bonus (capped at 12 points).
@@ -1384,14 +1510,30 @@ function computeScore(status, toksPerSec, modelSizeGB, memPct = null) {
 
 /** Letter grade derived from score+status. */
 function computeGrade(score, status) {
-	if (status === "cannot-run") return "F";
-	if (status === "unknown") return "?";
-	if (status === "can-run-slow") return score >= 40 ? "C" : "D";
-	if (score >= 85) return "S";
-	if (score >= 70) return "A";
-	if (score >= 55) return "B";
-	if (score >= 40) return "C";
-	if (score >= 20) return "D";
+	if (status === "cannot-run") {
+		return "F";
+	}
+	if (status === "unknown") {
+		return "?";
+	}
+	if (status === "can-run-slow") {
+		return score >= 40 ? "C" : "D";
+	}
+	if (score >= 85) {
+		return "S";
+	}
+	if (score >= 70) {
+		return "A";
+	}
+	if (score >= 55) {
+		return "B";
+	}
+	if (score >= 40) {
+		return "C";
+	}
+	if (score >= 20) {
+		return "D";
+	}
 	return "F";
 }
 
@@ -1432,20 +1574,36 @@ function loadOverrides() {
 function saveOverrides(o) {
 	try {
 		const filtered = {};
-		if (o.device !== undefined) filtered.device = o.device;
-		if (o.ramGB !== undefined) filtered.ramGB = o.ramGB;
-		if (o.systemRAM !== undefined) filtered.systemRAM = o.systemRAM;
-		if (o.memoryBandwidth !== undefined)
+		if (o.device !== undefined) {
+			filtered.device = o.device;
+		}
+		if (o.ramGB !== undefined) {
+			filtered.ramGB = o.ramGB;
+		}
+		if (o.systemRAM !== undefined) {
+			filtered.systemRAM = o.systemRAM;
+		}
+		if (o.memoryBandwidth !== undefined) {
 			filtered.memoryBandwidth = o.memoryBandwidth;
-		if (o.gpuCores !== undefined) filtered.gpuCores = o.gpuCores;
-		if (o.isAppleSilicon !== undefined)
+		}
+		if (o.gpuCores !== undefined) {
+			filtered.gpuCores = o.gpuCores;
+		}
+		if (o.isAppleSilicon !== undefined) {
 			filtered.isAppleSilicon = o.isAppleSilicon;
-		if (o.isMobile !== undefined) filtered.isMobile = o.isMobile;
-		if (o.estimatedVRAM !== undefined) filtered.estimatedVRAM = o.estimatedVRAM;
+		}
+		if (o.isMobile !== undefined) {
+			filtered.isMobile = o.isMobile;
+		}
+		if (o.estimatedVRAM !== undefined) {
+			filtered.estimatedVRAM = o.estimatedVRAM;
+		}
 
-		if (Object.keys(filtered).length === 0)
+		if (Object.keys(filtered).length === 0) {
 			localStorage.removeItem(OVERRIDES_KEY);
-		else localStorage.setItem(OVERRIDES_KEY, JSON.stringify(filtered));
+		} else {
+			localStorage.setItem(OVERRIDES_KEY, JSON.stringify(filtered));
+		}
 	} catch {
 		/* ignore quota / privacy errors */
 	}
@@ -1454,19 +1612,33 @@ function saveOverrides(o) {
 /** Apply user overrides on top of a fresh detection result. */
 function applyOverrides(hw, overrides) {
 	const o = overrides ?? loadOverrides();
-	if (Object.keys(o).length === 0) return hw;
+	if (Object.keys(o).length === 0) {
+		return hw;
+	}
 
 	const out = { ...hw };
-	if (o.isAppleSilicon !== undefined) out.isAppleSilicon = o.isAppleSilicon;
-	if (o.isMobile !== undefined) out.isMobile = o.isMobile;
-	if (o.estimatedVRAM !== undefined) out.estimatedVRAM = o.estimatedVRAM;
+	if (o.isAppleSilicon !== undefined) {
+		out.isAppleSilicon = o.isAppleSilicon;
+	}
+	if (o.isMobile !== undefined) {
+		out.isMobile = o.isMobile;
+	}
+	if (o.estimatedVRAM !== undefined) {
+		out.estimatedVRAM = o.estimatedVRAM;
+	}
 	if (o.ramGB !== undefined) {
 		out.ramGB = o.ramGB;
 		out.totalUsableRAM = o.ramGB;
 	}
-	if (o.systemRAM !== undefined) out.systemRAM = o.systemRAM;
-	if (o.memoryBandwidth !== undefined) out.memoryBandwidth = o.memoryBandwidth;
-	if (o.gpuCores !== undefined) out.gpuCores = o.gpuCores;
+	if (o.systemRAM !== undefined) {
+		out.systemRAM = o.systemRAM;
+	}
+	if (o.memoryBandwidth !== undefined) {
+		out.memoryBandwidth = o.memoryBandwidth;
+	}
+	if (o.gpuCores !== undefined) {
+		out.gpuCores = o.gpuCores;
+	}
 	return out;
 }
 
@@ -1552,7 +1724,9 @@ const BANDWIDTH_OPTIONS = [
 /** Merge a custom value into a sorted unique numeric option list. */
 function mergeNumericOption(options, custom) {
 	const set = new Set(options);
-	if (custom !== null && custom > 0) set.add(custom);
+	if (custom !== null && custom > 0) {
+		set.add(custom);
+	}
 	return Array.from(set).sort((a, b) => a - b);
 }
 
@@ -1567,32 +1741,64 @@ function gpuFamilyGroup(name) {
 		name.startsWith("Quadro") ||
 		name.startsWith("NVIDIA T") ||
 		/^T\d{3,4}$/.test(name)
-	)
+	) {
 		return "NVIDIA Pro";
-	if (/^(A100|H100|GH200|DGX Spark|L40S|L4|T4|Tesla P40)$/.test(name))
+	}
+	if (/^(A100|H100|GH200|DGX Spark|L40S|L4|T4|Tesla P40)$/.test(name)) {
 		return "NVIDIA Datacenter";
-	if (name.startsWith("RTX 50")) return "NVIDIA RTX 50";
-	if (name.startsWith("RTX 40")) return "NVIDIA RTX 40";
-	if (name.startsWith("RTX 30")) return "NVIDIA RTX 30";
-	if (name.startsWith("RTX 20")) return "NVIDIA RTX 20";
-	if (name.startsWith("GTX 16")) return "NVIDIA GTX 16";
-	if (name.startsWith("GTX 10")) return "NVIDIA GTX 10";
-	if (name.startsWith("GTX 9")) return "NVIDIA GTX 9";
-	if (name.startsWith("RX 9")) return "AMD RX 9000";
-	if (name.startsWith("RX 7")) return "AMD RX 7000";
-	if (name.startsWith("RX 6")) return "AMD RX 6000";
-	if (name.startsWith("RX 5")) return "AMD RX 5000";
-	if (name === "Radeon VII") return "AMD Older";
+	}
+	if (name.startsWith("RTX 50")) {
+		return "NVIDIA RTX 50";
+	}
+	if (name.startsWith("RTX 40")) {
+		return "NVIDIA RTX 40";
+	}
+	if (name.startsWith("RTX 30")) {
+		return "NVIDIA RTX 30";
+	}
+	if (name.startsWith("RTX 20")) {
+		return "NVIDIA RTX 20";
+	}
+	if (name.startsWith("GTX 16")) {
+		return "NVIDIA GTX 16";
+	}
+	if (name.startsWith("GTX 10")) {
+		return "NVIDIA GTX 10";
+	}
+	if (name.startsWith("GTX 9")) {
+		return "NVIDIA GTX 9";
+	}
+	if (name.startsWith("RX 9")) {
+		return "AMD RX 9000";
+	}
+	if (name.startsWith("RX 7")) {
+		return "AMD RX 7000";
+	}
+	if (name.startsWith("RX 6")) {
+		return "AMD RX 6000";
+	}
+	if (name.startsWith("RX 5")) {
+		return "AMD RX 5000";
+	}
+	if (name === "Radeon VII") {
+		return "AMD Older";
+	}
 	if (
 		name.startsWith("Radeon") ||
 		name.startsWith("Ryzen") ||
 		/^Vega \d$/.test(name)
-	)
+	) {
 		return "AMD Integrated";
-	if (name.startsWith("RX") || name.startsWith("Vega")) return "AMD Older";
-	if (name.startsWith("Arc")) return "Intel Arc";
-	if (name.startsWith("Iris") || name.startsWith("UHD"))
+	}
+	if (name.startsWith("RX") || name.startsWith("Vega")) {
+		return "AMD Older";
+	}
+	if (name.startsWith("Arc")) {
+		return "Intel Arc";
+	}
+	if (name.startsWith("Iris") || name.startsWith("UHD")) {
 		return "Intel Integrated";
+	}
 	return "Other";
 }
 
@@ -1655,7 +1861,9 @@ function getMeasureSpan() {
 		_measureSpan.style.cssText =
 			"visibility:hidden;position:absolute;white-space:nowrap;pointer-events:none";
 	}
-	if (!_measureSpan.isConnected) document.body.appendChild(_measureSpan);
+	if (!_measureSpan.isConnected) {
+		document.body.appendChild(_measureSpan);
+	}
 	return _measureSpan;
 }
 
@@ -1705,14 +1913,18 @@ function populateDeviceSelect(selectEl, currentValue) {
 	const groups = buildDevicePresetGroups();
 	for (const groupName of GROUP_ORDER) {
 		const items = groups[groupName];
-		if (!items?.length) continue;
+		if (!items?.length) {
+			continue;
+		}
 		const group = document.createElement("optgroup");
 		group.label = groupName;
 		for (const item of items) {
 			const opt = document.createElement("option");
 			opt.value = item.value;
 			opt.textContent = item.label;
-			if (item.value === currentValue) opt.selected = true;
+			if (item.value === currentValue) {
+				opt.selected = true;
+			}
 			group.appendChild(opt);
 		}
 		selectEl.appendChild(group);
